@@ -1,27 +1,46 @@
 package report
 
+import (
+	"fmt"
+)
+
+type entryKind int
+
+const (
+	errorEntry   entryKind = iota
+	warningEntry entryKind = iota
+)
+
 type Entry struct {
-	Line    int
-	Message string
+	line    int
+	message string
+	kind    entryKind
+}
+
+func (e Entry) String() string {
+	return fmt.Sprintf("line %d: %s", e.line, e.message)
+}
+
+func (e Entry) IsError() bool {
+	return (e.kind == errorEntry)
+}
+
+func (e Entry) IsWarning() bool {
+	return (e.kind == warningEntry)
 }
 
 type Report struct {
-	errors   []Entry
-	warnings []Entry
+	entries []Entry
 }
 
 func (r *Report) Error(line int, message string) {
-	r.errors = append(r.errors, Entry{line, message})
+	r.entries = append(r.entries, Entry{line, message, errorEntry})
 }
 
 func (r *Report) Warning(line int, message string) {
-	r.warnings = append(r.warnings, Entry{line, message})
+	r.entries = append(r.entries, Entry{line, message, warningEntry})
 }
 
-func (r *Report) Errors() []Entry {
-	return r.errors
-}
-
-func (r *Report) Warnings() []Entry {
-	return r.warnings
+func (r *Report) Entries() []Entry {
+	return r.entries
 }

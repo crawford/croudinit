@@ -20,10 +20,11 @@ func main() {
 	for _, r := range rules.Rules {
 		r(config, report)
 	}
-	for _, e := range report.Errors() {
-		fmt.Printf("Error   <stdin>:%d %s\n", e.Line, e.Message)
-	}
-	for _, w := range report.Warnings() {
-		fmt.Printf("Warning <stdin>:%d %s\n", w.Line, w.Message)
+	for _, e := range report.Entries() {
+		if e.IsError() {
+			fmt.Printf("Error   <stdin>:%s\n", e)
+		} else if e.IsWarning() {
+			fmt.Printf("Warning <stdin>:%s\n", e)
+		}
 	}
 }
