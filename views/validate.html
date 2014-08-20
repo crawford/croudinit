@@ -1,0 +1,35 @@
+{{define "main"}}
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CrowdConfig</title>
+		<style type="text/css">
+			.error {
+				color: #E00000;
+				font-weight: bold;
+			}
+			.warning {
+				color: #E0A000;
+				font-weight: bold;
+			}
+			#issues {
+				list-style-type: none;
+			}
+		</style>
+	</head>
+	<body>
+		<form method="post">
+			<label>Cloud-Config<textarea name="config" cols="80" rows="25" autofocus required>{{.Config}}</textarea></label>
+			<input type="submit" value="Validate Config" />
+		</form>
+		<ul id="issues">
+		{{ range .Report.Errors }}
+			<li><span class="error">Line {{.Line}}: {{.Message}}</span></li>
+		{{ end }}
+		{{ range .Report.Warnings }}
+			<li><span class="warning">Line {{.Line}}: {{.Message}}</span></li>
+		{{ end }}
+		</ul>
+	</body>
+</html>
+{{end}}
