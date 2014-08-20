@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/crawford/crowdconfig/validator/report"
 	"github.com/crawford/crowdconfig/validator/rules"
@@ -82,7 +83,7 @@ func postValidate(w http.ResponseWriter, r *http.Request) {
 	}
 	if c, ok := r.Form["config"]; ok {
 		if len(c) > 0 {
-			context.Config = c[0]
+			context.Config = strings.Replace(c[0], "\r", "", -1)
 		}
 	}
 
