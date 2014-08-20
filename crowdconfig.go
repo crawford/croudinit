@@ -30,9 +30,9 @@ func (s Redirector) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, string(s), http.StatusTemporaryRedirect)
 }
 
-type Handler func(http.ResponseWriter, *http.Request)
+type handler func(http.ResponseWriter, *http.Request)
 
-func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (h handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println(r)
@@ -59,8 +59,8 @@ func main() {
 	}
 
 	router.NotFoundHandler = Redirector("/validate")
-	router.HandleFunc("/validate", getValidate).Methods("GET")
-	router.HandleFunc("/validate", postValidate).Methods("POST")
+	router.HandleFunc("/validate", handler(getValidate)).Methods("GET")
+	router.HandleFunc("/validate", handler(postValidate)).Methods("POST")
 
 	log.Fatalln(server.ListenAndServe())
 }
