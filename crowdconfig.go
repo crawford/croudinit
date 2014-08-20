@@ -78,8 +78,10 @@ func postValidate(w http.ResponseWriter, r *http.Request) {
 	context := struct {
 		Report *report.Report
 		Config string
+		DidValidate bool
 	}{
 		Report: &report.Report{},
+		DidValidate: true,
 	}
 	if c, ok := r.Form["config"]; ok {
 		if len(c) > 0 {

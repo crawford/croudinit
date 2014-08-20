@@ -12,6 +12,10 @@
 				color: #E0A000;
 				font-weight: bold;
 			}
+			.ok {
+				color: #00A000;
+				font-weight: bold;
+			}
 			#issues {
 				list-style-type: none;
 			}
@@ -23,11 +27,16 @@
 			<input type="submit" value="Validate Config" />
 		</form>
 		<ul id="issues">
-		{{ range .Report.Errors }}
-			<li><span class="error">Line {{.Line}}: {{.Message}}</span></li>
-		{{ end }}
-		{{ range .Report.Warnings }}
-			<li><span class="warning">Line {{.Line}}: {{.Message}}</span></li>
+		{{ range .Report.Entries }}
+			{{ if .IsError }}
+			<li><span class="error">{{.String}}</span></li>
+			{{ else if .IsWarning }}
+			<li><span class="warning">{{.String}}</span></li>
+			{{ end }}
+		{{ else }}
+			{{ if .DidValidate }}
+			<li><span class="ok">Valid!</span></li>
+			{{ end }}
 		{{ end }}
 		</ul>
 	</body>
