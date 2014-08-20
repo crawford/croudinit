@@ -16,9 +16,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	report := report.NewReport()
+	report := &report.Report{}
 	for _, r := range rules.Rules {
 		r(config, report)
 	}
-	fmt.Printf("%+v\n", report)
+	for _, e := range report.Errors() {
+		fmt.Printf("Error   <stdin>:%d %s\n", e.Line, e.Message)
+	}
+	for _, w := range report.Warnings() {
+		fmt.Printf("Warning <stdin>:%d %s\n", w.Line, w.Message)
+	}
 }

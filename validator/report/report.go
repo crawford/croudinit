@@ -1,25 +1,27 @@
 package report
 
-type entry struct {
-	line    int
-	message string
+type Entry struct {
+	Line    int
+	Message string
 }
 
 type Report struct {
-	errors   []entry
-	warnings []entry
+	errors   []Entry
+	warnings []Entry
 }
 
 func (r *Report) Error(line int, message string) {
-	r.errors = append(r.errors, entry{line, message})
+	r.errors = append(r.errors, Entry{line, message})
 }
 
 func (r *Report) Warning(line int, message string) {
-	r.warnings = append(r.warnings, entry{line, message})
+	r.warnings = append(r.warnings, Entry{line, message})
 }
 
-func NewReport() *Report {
-	return &Report{
-		errors: make([]entry, 0),
-	}
+func (r *Report) Errors() []Entry {
+	return r.errors
+}
+
+func (r *Report) Warnings() []Entry {
+	return r.warnings
 }
