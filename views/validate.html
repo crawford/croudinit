@@ -2,7 +2,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>CrowdConfig</title>
+		<title>CrowdConfig - A CoreOS Cloud-Config Validator</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 			.error {
 				color: #E00000;
@@ -19,26 +21,88 @@
 			#issues {
 				list-style-type: none;
 			}
+
+			#issues p {
+				padding: 15px;
+			}
+
+			body {
+				background: #2277ad;
+				font-family: 'Source Sans Pro', Helvetica, sans-serif;
+			}
+
+			.main-container {
+				position: absolute;
+				top: 90px;
+				left: 20px;
+				right: 20px;
+				bottom: 20px;
+				padding: 0 30px 30px 30px;
+				background: #fff;
+				-webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+				-moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+				-ms-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+				-o-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+				box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.4);
+			}
+
+			.column {
+				padding-top: 30px;
+			}
+
+			label {
+				display: block;
+				width: 100%;
+				margin-bottom: 20px;
+			}
+
+			textarea {
+				width: 100%;
+				margin-bottom: 10px;
+			}
+
+			.title {
+				color: #fff;
+				font-weight: 400;
+				letter-spacing: -0.03em;
+				text-align: center;
+				margin: 0;
+				font-size: 36px;
+				line-height: 60px;
+				height: 60px;
+				text-shadow: rgba(0, 0, 0, 0.247059) 1px 1px 2px;
+			}
 		</style>
 	</head>
 	<body>
-		<form method="post">
-			<label>Cloud-Config<br /><textarea name="config" cols="80" rows="25" autofocus required>{{.Config}}</textarea></label><br />
-			<input type="submit" value="Validate Config" />
-		</form>
-		<ul id="issues">
-		{{ range .Report.Entries }}
-			{{ if .IsError }}
-			<li><span class="error">{{.String}}</span></li>
-			{{ else if .IsWarning }}
-			<li><span class="warning">{{.String}}</span></li>
-			{{ end }}
-		{{ else }}
-			{{ if .DidValidate }}
-			<li><span class="ok">Valid!</span></li>
-			{{ end }}
-		{{ end }}
-		</ul>
+		<div class="title">CoreOS Cloud-Config Validator</div>
+		<div class="main-container">
+			<div class="row">
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 column">
+					<form method="post">
+						<label for="config">Paste your Cloud-Config YAML here:</label>
+						<textarea name="config" id="config" cols="80" rows="25" autofocus required>{{.Config}}</textarea>
+						<input type="submit" value="Validate Config" class="btn btn-primary" />
+					</form>
+				</div>
+				<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 column" id="issues">
+					<label for="config">Validation Output:</label>
+					{{ range .Report.Entries }}
+						{{ if .IsError }}
+							<p class="bg-danger">{{.String}}</p>
+						{{ else if .IsWarning }}
+							<p class="bg-warning">{{.String}}</p>
+						{{ end }}
+					{{ else }}
+						{{ if .DidValidate }}
+							<p class="bg-success">No errors, your cloud-config is valid!</p>
+						{{ else }}
+							<p class="bg-info">Paste your cloud-config and any errors will be reported.</p>
+						{{ end }}
+					{{ end }}
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
 {{end}}
